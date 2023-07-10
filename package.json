@@ -1,0 +1,45 @@
+{
+	"name": "wordpass",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"test": "vitest",
+		"lint": "prettier --plugin-search-dir . --check . && eslint .",
+		"format": "prettier --plugin-search-dir . --write ."
+	},
+	"devDependencies": {
+		"@modyfi/vite-plugin-yaml": "^1.0.4",
+		"@neoconfetti/svelte": "^1.0.0",
+		"@sveltejs/adapter-auto": "^2.1.0",
+		"@sveltejs/kit": "^1.22.1",
+		"autoprefixer": "^10.4.14",
+		"daisyui": "^3.2.1",
+		"eslint": "^8.44.0",
+		"eslint-config-prettier": "^8.8.0",
+		"eslint-plugin-svelte": "^2.32.2",
+		"postcss": "^8.4.25",
+		"prettier": "^2.8.8",
+		"prettier-plugin-svelte": "^2.10.1",
+		"prettier-plugin-tailwindcss": "^0.3.0",
+		"svelte": "^4.0.5",
+		"tailwindcss": "^3.3.2",
+		"vite": "^4.4.2",
+		"vitest": "^0.32.4"
+	},
+	"type": "module",
+	"dependencies": {
+		"@fontsource-variable/raleway": "^5.0.5",
+		"@fontsource/ibm-plex-mono": "^5.0.4",
+		"@fontsource/ibm-plex-sans": "^5.0.4",
+		"@rollup/plugin-json": "^6.0.0",
+		"bowser": "^2.11.0",
+		"howler": "^2.2.3",
+		"localforage": "^1.10.0",
+		"lockr": "0.9.0-beta.2",
+		"object-path": "^0.11.8",
+		"store": "^2.0.12",
+		"svelte-i18n": "^3.7.0"
+	}
+}

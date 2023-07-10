@@ -1,0 +1,7 @@
+title: WordPass
+addTypewriterKeySoundFile: Add typewriter sound file
+audio: Audio
+browsrNotSupport: Does not fully support current browsers
+config: Configuration
+setTypewriterKeySound: Turn on or off the typewriter keystroke sound
+setTypewriterKeySoundFileLocation: Set the typewriter keystroke sound file path
