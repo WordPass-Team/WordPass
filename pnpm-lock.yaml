@@ -14,6 +14,12 @@ dependencies:
   '@fontsource/ibm-plex-sans':
     specifier: ^5.0.4
     version: 5.0.4
+  '@fontsource/noto-sans-sc':
+    specifier: ^5.0.5
+    version: 5.0.5
+  '@loadingio/css-spinner':
+    specifier: ^2.0.2
+    version: 2.0.2
   '@rollup/plugin-json':
     specifier: ^6.0.0
     version: 6.0.0
@@ -373,6 +379,10 @@ packages:
     resolution: {integrity: sha512-XchiAy38h8Zvk++E1jDtAW5/+wVTuP9iT0p3i0+GxbNsTNHBq6DWlzFKCAx21wrEU8H74WsictYnkvqDFt1F9g==}
     dev: false
 
+  /@fontsource/noto-sans-sc@5.0.5:
+    resolution: {integrity: sha512-S1Zba4NGeSIG3I6W4nZRG0eKWmL1DMs3pN//RIUzixRiXUjqwHdSIxPF8t7If05xxDA9+EvbKWChEJxQynHKgQ==}
+    dev: false
+
   /@formatjs/ecma402-abstract@1.11.4:
     resolution: {integrity: sha512-EBikYFp2JCdIfGEb5G9dyCkTGDmC57KSHhRQOC3aYxoPWVZvfWCDjZwkGYHN7Lis/fmuWl906bnNTJifDQ3sXw==}
     dependencies:
@@ -461,6 +471,10 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
+
+  /@loadingio/css-spinner@2.0.2:
+    resolution: {integrity: sha512-cEn4mcvtd6q2YlSIjklGm8jP4ENkH0bxIC6lVqBC97oXtc8eRuCg16MfD94f0UvukFpeQwX2akJVsUX9LjpLRw==}
+    dev: false
 
   /@modyfi/vite-plugin-yaml@1.0.4(vite@4.4.2):
     resolution: {integrity: sha512-qkT0KiR3AQQRfUvDzLv4+1rYAzXj+QmGhAbyUd0Ordf9xynK76i758lk5GiEfxuQxbvdqDaJ9oXkH/KacbSjQQ==}

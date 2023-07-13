@@ -3,6 +3,10 @@
 	import { dict } from '../Config/Store/LoadDict.js';
 	import 'remixicon/fonts/remixicon.css';
 	import getWordInfos from './GetWordInfos.js';
+	import '@fontsource/ibm-plex-sans/500.css';
+	import '@fontsource/ibm-plex-sans/600.css';
+	import '@fontsource/noto-sans-sc/500.css';
+	import '@loadingio/css-spinner/index.min.css';
 	let sortedDict,
 		currentWordCount = 0,
 		matchWords;
@@ -43,7 +47,7 @@
 						.startsWith(matchWords.toLowerCase()) || String(word.trans)
 						.toLowerCase()
 						.includes(matchWords.toLowerCase())}
-					<div class="word">
+					<div class="word-card">
 						<div
 							role="button"
 							tabindex="0"
@@ -72,41 +76,70 @@
 			{/each}
 		</div>
 	</div>
-	<div class="info">
+	<div class="title-and-info">
 		{#if currentWordCount == -1}
-			<div class="analyze">e</div>
+			<div class="analyze">Analyze</div>
 		{/if}
 		{#if currentWordCount >= 0}
 			{#key currentWordCount}
-				<div class="word-info">
-					<div class="name">
-						{sortedDict[currentWordCount].name[0].toUpperCase()}{sortedDict[
+				<div class="title">
+					<span class="name"
+						>{sortedDict[currentWordCount].name[0].toUpperCase()}{sortedDict[
 							currentWordCount
-						].name.slice(1)}
-					</div>
-					{#await getWordInfos(sortedDict[currentWordCount].name)}
-						<div class="pending">Pending...</div>
-					{:then wordInfos}
-						{#each wordInfos as wordInfo}
-							<h1 class="part-of-speech">{wordInfo.partOfSpeech}</h1>
-							{#each wordInfo.definitions as definition}
-								<div class="definition">
-									<h2>Definition</h2>
-									<div>{@html definition.definition}</div>
-								</div>
-								{#if definition.parsedExamples}
-									<div class="example">
-										<h3>Example</h3>
-										{#each definition.parsedExamples as example}
-											<div>{@html example.example}</div>
-										{/each}
-									</div>
-								{/if}
+						].name.slice(1)}</span
+					>
+					<span class="phone">
+						{#if sortedDict[currentWordCount].ukphone}
+							<span>
+								BrE /{sortedDict[currentWordCount].ukphone}/
+							</span>{/if}
+						{#if sortedDict[currentWordCount].usphone}
+							<span>
+								NAmE /{sortedDict[currentWordCount].usphone}/
+							</span>{/if}
+					</span>
+				</div>
+				<div class="word-info">
+					<div class="info">
+						{#await getWordInfos(sortedDict[currentWordCount].name)}
+							<div class="pending" />
+						{:then wordInfos}
+							{#each wordInfos as wordInfo}
+								<h1 class="l1 part-of-speech">{wordInfo.partOfSpeech}</h1>
+								{#each wordInfo.definitions as definition}
+									{#if definition.definition}
+										<div class="l2 definition">
+											<h2>Definition</h2>
+											<div>
+												{@html definition.definition.replaceAll('/wiki/', '//wiktionary.org/wiki/')}
+											</div>
+										</div>
+									{/if}
+									{#if definition.parsedExamples}
+										<div class="l3 example">
+											<h3>Example</h3>
+											{#each definition.parsedExamples as example, index}
+												{#if definition.parsedExamples.length >= 2}
+													<div>
+														{index + 1}. {@html example.example.replace(
+															'/wiki/',
+															'//wiktionary.org/wiki/'
+														)}
+													</div>
+												{:else}
+													<div>
+														{@html example.example.replace('/wiki/', '//wiktionary.org/wiki/')}
+													</div>
+												{/if}
+											{/each}
+										</div>
+									{/if}
+								{/each}
 							{/each}
-						{/each}
-					{:catch error}
-						<div>{error}</div>
-					{/await}
+						{:catch error}
+							<div>{error}</div>
+						{/await}
+					</div>
 				</div>
 			{/key}
 		{/if}
@@ -134,11 +167,11 @@
 		box-shadow: inset 0 0 5rem white;
 		@apply mt-2 h-full overflow-scroll overflow-x-hidden;
 	}
-	.info {
-		@apply basis-4/6;
+	.title-and-info {
+		@apply flex basis-4/6 flex-col pl-2;
 	}
-	.word {
-		@apply pb-2 pl-2 pr-2 pt-2 opacity-80 hover:opacity-100;
+	.word-card {
+		@apply pb-2 pl-2 pr-2 pt-2;
 	}
 	.name {
 		@apply text-3xl font-bold;
@@ -150,15 +183,39 @@
 		@apply text-sm;
 	}
 	.word-info {
-		@apply h-full overflow-scroll overflow-x-hidden pl-2;
+		@apply h-full overflow-scroll overflow-x-hidden;
+	}
+	.pending {
+		@apply flex h-full items-center justify-center opacity-25;
+	}
+	.title {
+		@apply mb-2;
+	}
+	.title > .name {
+		@apply text-4xl font-bold;
+	}
+	.title > .phone {
+		@apply text-base;
 	}
 	h1 {
-		@apply text-2xl;
+		@apply text-2xl font-bold;
 	}
 	h2 {
-		@apply text-xl;
+		@apply text-xl font-semibold;
 	}
 	h3 {
-		@apply text-lg;
+		@apply text-lg font-medium;
+	}
+	.l1 {
+		@apply pl-2;
+	}
+	.l2 {
+		@apply pl-4;
+	}
+	.l3 {
+		@apply pl-6;
+	}
+	.word-info > *[href] {
+		@apply underline;
 	}
 </style>

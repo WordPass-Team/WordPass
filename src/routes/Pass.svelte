@@ -41,9 +41,14 @@
 		}
 	}
 	function check() {
-		let Typed = typed;
-		if ($config.input.ignoreCase) Typed = Typed.toLowerCase();
-		if (Typed === $dict[$currentWordCount].name) {
+		let Typed = typed,
+			result = false;
+		if ($config.input.ignoreCase) {
+			result = Typed.toLowerCase() == $dict[$currentWordCount].name.toLowerCase();
+		} else {
+			result = Typed == $dict[$currentWordCount].name;
+		}
+		if (result) {
 			// Pass!
 			$dict[$currentWordCount].passed = true;
 			currentWordCount.update((now) => {
@@ -54,7 +59,7 @@
 			// Clear
 			typed = '';
 			untyped = makeUntyped($dict[$currentWordCount].name.length).slice(typed.length);
-		} else if (Typed.length === $dict[$currentWordCount].name.length) {
+		} else if (Typed.length == $dict[$currentWordCount].name.length) {
 			// Retry!
 			dict.update((i) => {
 				if (i[$currentWordCount].passed) i[$currentWordCount].passed = false;
@@ -174,6 +179,6 @@
 		@apply h-10 pb-4 text-lg;
 	}
 	.trans {
-		@apply h-10 pt-4 text-lg;
+		@apply h-10 pt-4 text-left text-lg;
 	}
 </style>

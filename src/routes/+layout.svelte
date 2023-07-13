@@ -4,6 +4,8 @@
 	import '../app.css';
 	import '@fontsource/ibm-plex-sans/400.css';
 	import '@fontsource/ibm-plex-sans/700.css';
+	import '@fontsource/noto-sans-sc/400.css';
+	import '@fontsource/noto-sans-sc/700.css';
 	import Bowser from 'bowser';
 	import { addMessages, init, getLocaleFromNavigator, _ } from 'svelte-i18n';
 	import zh from '$lib/i18n/lang/zh.yaml';
@@ -55,7 +57,7 @@
 
 <style lang="postcss">
 	:global(html) {
-		font-family: 'IBM Plex Sans', sans-serif;
+		font-family: 'IBM Plex Sans', 'Noto Sans SC', sans-serif;
 		@apply m-0 p-0;
 	}
 	:global(body) {
