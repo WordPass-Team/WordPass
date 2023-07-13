@@ -1,12 +1,12 @@
 <script>
-	import { options } from '../Default.config';
+	import { options } from '../Store/Options';
 	import { onDestroy } from 'svelte';
-	import { config, storeObj } from '../Config';
+	import { config } from '../Store/Config';
 	import objectPath from 'object-path';
-	export let key, info;
-	let selectValue = '';
+	export let key, customKey, info;
+	let selectValue;
 	const destroy = config.subscribe((result) => {
-		selectValue = objectPath.get(result, key);
+		selectValue = objectPath.get(result, `${key}.name`);
 	});
 	onDestroy(destroy);
 </script>
@@ -17,19 +17,22 @@
 		bind:value={selectValue}
 		on:change={(e) => {
 			config.update((i) => {
-				objectPath.set(i, key, e.target.value);
-				storeObj.set('config', i);
-				console.log(e.target.value);
-				console.log(i);
+				objectPath.set(i, key, objectPath.get($options, key)[e.target.selectedIndex]);
 				return i;
 			});
 			return;
 		}}
 	>
-		{#each objectPath.get(options, key, '') as option}
-			<option>{option}</option>
+		{#each objectPath.get($options, key) as option}
+			<option>{option.name}</option>
 		{/each}
-		<option>test</option>
+		{#if objectPath.get($options, customKey)}
+			{#each objectPath.get($options, customKey) as option}
+				{#if option.name}
+					<option>{option.name}</option>
+				{/if}
+			{/each}
+		{/if}
 	</select>
 </div>
 
@@ -44,6 +47,9 @@
 		@apply flex items-center;
 	}
 	select {
-		@apply select-bordered select mr-4;
+		@apply select-bordered select w-2/5;
+	}
+	option {
+		@apply max-w-5xl;
 	}
 </style>

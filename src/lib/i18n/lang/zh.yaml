@@ -1,0 +1,19 @@
+# Home
+title: 'WordPass'
+wordbook: '单词本'
+config: '配置'
+browsrNotSupport: '不完全支持当前浏览器'
+
+# Config
+dictionary: '词典'
+name: '名称'
+src: '资源地址'
+submit: '提交'
+setDictionaryFileLocation: '设置词典文件路径'
+addDictionaryFile: '添加词典文件'
+removeDictionaryFile: '移除打字机音效文件'
+audio: '音频'
+setTypewriterKeySound: '开启或关闭关打字机击键音效'
+setTypewriterKeySoundFileLocation: '设置打字机击键音效文件路径'
+addTypewriterKeySoundFile: '添加打字机音效文件'
+removeTypewriterKeySoundFile: '移除打字机音效文件'

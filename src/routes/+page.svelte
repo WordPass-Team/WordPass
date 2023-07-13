@@ -1,5 +1,6 @@
 <script>
-	import { dict, currentWordCount } from './Config/Dict.js';
+	import { dict } from './Config/Store/LoadDict.js';
+	import { currentWordCount } from './CountWords';
 	import WordDisplay from './WordDisplay.svelte';
 	import Pass from './Pass.svelte';
 </script>
@@ -25,7 +26,7 @@
 		@apply m-0 p-0;
 	}
 	.main {
-		height: calc(100dvh - 2.5rem);
+		height: calc(100dvh - 3rem);
 		@apply flex w-full flex-nowrap content-center items-center justify-center pl-10 pr-10 text-center;
 	}
 	.main > div {
@@ -36,16 +37,10 @@
 		@apply basis-2/6 opacity-80;
 	}
 	.last {
-		perspective-origin: 10rem;
-		transform: perspective(20rem) rotateY(5deg);
-		transform-origin: right;
-		@apply pr-8 text-right;
+		@apply pr-2 text-right;
 	}
 	.next {
-		perspective-origin: -10rem;
-		transform: perspective(20rem) rotateY(-5deg);
-		transform-origin: left;
-		@apply pl-8 text-left;
+		@apply pl-2 text-left;
 	}
 	.pass {
 		@apply basis-2/3;

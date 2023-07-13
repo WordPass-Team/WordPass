@@ -1,8 +1,8 @@
 <script>
-	import { config } from './Config/Config';
+	import { config } from './Config/Store/Config';
+	import { currentWordCount } from './CountWords';
 	import { Howl } from 'howler';
-	import { dict } from './Config/Dict';
-	import { currentWordCount } from './Config/Dict';
+	import { dict } from './Config/Store/LoadDict';
 	import '@fontsource/ibm-plex-mono/400.css';
 	import '@fontsource/ibm-plex-mono/700.css';
 
@@ -18,7 +18,7 @@
 		mouseState = false,
 		untypedClassName = 'untyped';
 	function checkControlerVisibility(exp) {
-		if (exp) return 'visibility: hidden';
+		if (exp) return 'filter: opacity(0.2); pointer-events: none';
 		return '';
 	}
 	async function type(event) {
@@ -44,15 +44,26 @@
 		let Typed = typed;
 		if ($config.input.ignoreCase) Typed = Typed.toLowerCase();
 		if (Typed === $dict[$currentWordCount].name) {
-			console.log('Good!');
+			// Pass!
+			$dict[$currentWordCount].passed = true;
 			currentWordCount.update((now) => {
 				now = now + 1;
 				return now;
 			});
+			console.log($dict[$currentWordCount]);
+			// Clear
 			typed = '';
 			untyped = makeUntyped($dict[$currentWordCount].name.length).slice(typed.length);
 		} else if (Typed.length === $dict[$currentWordCount].name.length) {
-			console.log('Not Good.');
+			// Retry!
+			dict.update((i) => {
+				if (i[$currentWordCount].passed) i[$currentWordCount].passed = false;
+				if (!i[$currentWordCount].retry) i[$currentWordCount].retry = [];
+				i[$currentWordCount].retry.push(new Date().getTime());
+				return i;
+			});
+			console.log($dict[$currentWordCount]);
+			// Clear
 			typed = '';
 			untyped = makeUntyped($dict[$currentWordCount].name.length).slice(typed.length);
 		}
@@ -60,7 +71,7 @@
 	async function beep() {
 		if ($config.audio.beep) {
 			new Howl({
-				src: [$config.audio.beepSrc]
+				src: [$config.audio.beepFile.src]
 			}).play();
 			console.log('beep!');
 		}
@@ -79,6 +90,17 @@
 
 <!-- svelte-ignore a11y-mouse-events-have-key-events -->
 <div class="main">
+	<div class="phone">
+		{#if $dict[$currentWordCount].ukphone}<span class="phone">
+				BrE /{$dict[$currentWordCount].ukphone}/
+			</span>
+		{/if}
+		{#if $dict[$currentWordCount].usphone}
+			<span class="phone">
+				NAmE /{$dict[$currentWordCount].usphone}/
+			</span>
+		{/if}
+	</div>
 	<div
 		class="input"
 		role="textbox"
@@ -105,7 +127,7 @@
 				untyped = makeUntyped($dict[$currentWordCount].name.length).slice(typed.length);
 			}}>{`<`}</span
 		>
-		<span class="typed">{typed}</span><span class={untypedClassName}>{untyped}</span>
+		<span><span class="typed">{typed}</span><span class={untypedClassName}>{untyped}</span></span>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<span
 			style={checkControlerVisibility(!($currentWordCount + 2 <= $dict.length))}
@@ -118,7 +140,19 @@
 			}}>{`>`}</span
 		>
 	</div>
-	<div class="trans">{$dict[$currentWordCount].trans}</div>
+	{#if $dict[$currentWordCount].trans}
+		<div class="trans">
+			{#each $dict[$currentWordCount].trans as trans, index}
+				{#if $dict[$currentWordCount].trans.length >= 2}
+					<div class="tran">
+						{index + 1}. {trans}
+					</div>
+				{:else}
+					<div class="tran">{trans}</div>
+				{/if}
+			{/each}
+		</div>
+	{/if}
 </div>
 
 <style lang="postcss">
@@ -136,7 +170,10 @@
 	.untyped-hover {
 		@apply opacity-50;
 	}
+	.phone {
+		@apply h-10 pb-4 text-lg;
+	}
 	.trans {
-		@apply mt-2 h-10 text-lg;
+		@apply h-10 pt-4 text-lg;
 	}
 </style>

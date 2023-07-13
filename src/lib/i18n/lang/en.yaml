@@ -1,0 +1,16 @@
+title: WordPass
+addTypewriterKeySoundFile: Add typewriter sound file
+audio: Audio
+browsrNotSupport: Does not fully support current browsers
+config: Config
+setTypewriterKeySound: Turn on or off the typewriter keystroke sound
+setTypewriterKeySoundFileLocation: Set the typewriter keystroke sound file path
+submit: Submit
+setDictionaryFileLocation: Set dictionary file path
+src: resource address
+wordbook: Wordbook
+removeTypewriterKeySoundFile: Remove typewriter sound files
+addDictionaryFile: Add dictionary file
+dictionary: Dictionary
+name: name
+removeDictionaryFile: Remove typewriter sound files

@@ -1,6 +1,6 @@
 <script>
-	import DictExample from './Config/Dict.example';
-	import { dict, currentWordCount } from './Config/Dict';
+	import { dict } from './Config/Store/LoadDict';
+	import { currentWordCount } from './CountWords';
 	export let offset = 0;
 	let wordCount = 0;
 	currentWordCount.subscribe((result) => {

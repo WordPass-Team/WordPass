@@ -1,15 +1,15 @@
 <script>
+	import loadDict from './Config/Store/LoadDict';
+	loadDict();
 	import '../app.css';
 	import '@fontsource/ibm-plex-sans/400.css';
 	import '@fontsource/ibm-plex-sans/700.css';
 	import Bowser from 'bowser';
 	import { addMessages, init, getLocaleFromNavigator, _ } from 'svelte-i18n';
-	import zhCN from '$lib/i18n/lang/zh-CN.yaml';
-	import enUS from '$lib/i18n/lang/en-US.yaml';
-	addMessages('zh-CN', zhCN);
-	addMessages('zh', zhCN);
-	addMessages('en-US', enUS);
-	addMessages('en', enUS);
+	import zh from '$lib/i18n/lang/zh.yaml';
+	import en from '$lib/i18n/lang/en.yaml';
+	addMessages('zh', zh);
+	addMessages('en', en);
 	init({
 		fallbackLocale: 'zh-CN',
 		initialLocale: getLocaleFromNavigator()
@@ -44,7 +44,10 @@
 				<div>{$_(browserNotSupport)}</div>
 			{/if}
 		</div>
-		<div><a href="/Config">{$_('config')}</a></div>
+		<div>
+			<a href="/WordBook">{$_('wordbook')}</a>
+			<a href="/Config">{$_('config')}</a>
+		</div>
 	</div>
 </div>
 
@@ -60,8 +63,8 @@
 	}
 	.nav {
 		background-color: aliceblue;
-		box-shadow: 0 0 10rem #0d6efd;
-		@apply sticky top-0 flex h-10 w-full flex-nowrap content-center items-center justify-center pl-5 pr-5;
+		box-shadow: 0 0 2rem #0d6dfd50;
+		@apply sticky top-0 flex h-12 w-full flex-nowrap content-center items-center justify-center pl-5 pr-5;
 	}
 	.nav > div {
 		@apply flex w-full flex-nowrap content-center items-center justify-between;
@@ -70,6 +73,9 @@
 		@apply inline-block h-full w-fit;
 	}
 	.logo {
-		@apply select-none font-bold;
+		@apply select-none text-xl font-bold;
+	}
+	a {
+		@apply inline-block pl-2;
 	}
 </style>

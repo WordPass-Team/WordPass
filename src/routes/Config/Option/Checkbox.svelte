@@ -1,6 +1,6 @@
 <script>
 	import { onDestroy } from 'svelte';
-	import { config, storeObj } from '../Config';
+	import { config } from '../Store/Config';
 	import objectPath from 'object-path';
 	export let key, info;
 	let checkedState = false;
@@ -18,9 +18,6 @@
 		on:click={(e) => {
 			config.update((i) => {
 				objectPath.set(i, key, e.target.checked);
-				storeObj.set('config', i);
-				console.log(e.target.checked);
-				console.log(i);
 				return i;
 			});
 			return;
@@ -39,6 +36,6 @@
 		@apply flex items-center;
 	}
 	input {
-		@apply toggle mr-4;
+		@apply toggle;
 	}
 </style>
