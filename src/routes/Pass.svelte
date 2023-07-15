@@ -1,4 +1,5 @@
 <script>
+	import { record } from './Config/Store/Word.js';
 	import { config } from './Config/Store/Config';
 	import { currentWordCount } from './CountWords';
 	import { Howl } from 'howler';
@@ -61,6 +62,7 @@
 			untyped = makeUntyped($dict[$currentWordCount].name.length).slice(typed.length);
 		} else if (Typed.length == $dict[$currentWordCount].name.length) {
 			// Retry!
+			record.update((i) => {});
 			dict.update((i) => {
 				if (i[$currentWordCount].passed) i[$currentWordCount].passed = false;
 				if (!i[$currentWordCount].retry) i[$currentWordCount].retry = [];
