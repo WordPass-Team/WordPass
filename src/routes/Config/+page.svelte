@@ -4,12 +4,12 @@
 	import Select from './Option/Select.svelte';
 	import TextInput from './Option/TextInput.svelte';
 	import SelectRemove from './Option/SelectRemove.svelte';
-	import SelectDict from './Option/SelectDict.svelte';
 </script>
 
 <div class="main">
 	<h1>{$_('dictionary')}</h1>
-	<SelectDict
+	<Checkbox key="dict.shuffled" info={$_('setDictionaryShuffledMode')} />
+	<Select
 		key="dict.dictFile"
 		customKey="dict.customDictFile"
 		info={$_('setDictionaryFileLocation')}

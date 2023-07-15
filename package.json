@@ -9,6 +9,14 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write ."
 	},
+	"browserslist": {
+		"development": [
+			"defaults, Firefox > 100"
+		],
+		"production": [
+			"defaults, not dead, Chrome > 64, Firefox > 80"
+		]
+	},
 	"devDependencies": {
 		"@modyfi/vite-plugin-yaml": "^1.0.4",
 		"@neoconfetti/svelte": "^1.0.0",
@@ -30,6 +38,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@babel/preset-env": "^7.22.9",
 		"@fontsource-variable/raleway": "^5.0.5",
 		"@fontsource/ibm-plex-mono": "^5.0.4",
 		"@fontsource/ibm-plex-sans": "^5.0.4",
@@ -38,15 +47,15 @@
 		"@rollup/plugin-json": "^6.0.0",
 		"@sveltejs/svelte-virtual-list": "^3.0.1",
 		"bowser": "^2.11.0",
+		"core-js": "3.31.1",
 		"dayjs": "^1.11.9",
 		"google-dictionary-api": "^1.0.8",
 		"howler": "^2.2.3",
-		"html-to-image": "^1.11.11",
 		"localforage": "^1.10.0",
-		"lockr": "0.9.0-beta.2",
+		"lodash": "^4.17.21",
 		"object-path": "^0.11.8",
+		"regenerator-runtime": "^0.13.11",
 		"remixicon": "^3.4.0",
-		"store": "^2.0.12",
 		"svelte-i18n": "^3.7.0"
 	}
 }

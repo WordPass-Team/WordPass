@@ -1,25 +1,15 @@
 <script>
-	import { onDestroy } from 'svelte';
-	import { dict } from '../Config/Store/LoadDict.js';
+	import Analyze from './Analyze.svelte';
 	import 'remixicon/fonts/remixicon.css';
 	import getWordInfos from './GetWordInfos.js';
 	import '@fontsource/ibm-plex-sans/500.css';
 	import '@fontsource/ibm-plex-sans/600.css';
 	import '@fontsource/noto-sans-sc/500.css';
 	import '@loadingio/css-spinner/index.min.css';
-	let sortedDict,
-		currentWordCount = 0,
+	import { importantSortedDict } from '../Config/Store/SortedDict';
+	let count = -1,
 		matchWords;
-	const destroy = dict.subscribe((result) => {
-		sortedDict = result.toSorted((a, b) => {
-			const A = String(a.name).toLowerCase();
-			const B = String(b.name).toLowerCase();
-			if (A < B) return -1;
-			if (A > B) return 1;
-			return 0;
-		});
-	});
-	onDestroy(destroy);
+	import VirtualList from './VirtualList.svelte';
 </script>
 
 <div class="main">
@@ -29,7 +19,7 @@
 				class="home-button"
 				on:click={() => {
 					// -1 -> Home
-					currentWordCount = -1;
+					count = -1;
 				}}><i class="ri-home-2-line" /></button
 			>
 			<input
@@ -41,7 +31,7 @@
 			/>
 		</div>
 		<div class="list">
-			{#each sortedDict as word, index}
+			<VirtualList items={$importantSortedDict} let:item={word} let:index>
 				{#if !matchWords || word.name
 						.toLowerCase()
 						.startsWith(matchWords.toLowerCase()) || String(word.trans)
@@ -53,8 +43,8 @@
 							tabindex="0"
 							data-index={index}
 							on:focus={(e) => {
-								currentWordCount = e.currentTarget.dataset.index;
-								console.log(sortedDict[currentWordCount]);
+								count = e.currentTarget.dataset.index;
+								console.log($importantSortedDict[count]);
 							}}
 						>
 							<div class="name">{word.name[0].toUpperCase()}{word.name.slice(1)}</div>
@@ -73,35 +63,44 @@
 						</div>
 					</div>
 				{/if}
-			{/each}
+			</VirtualList>
 		</div>
 	</div>
 	<div class="title-and-info">
-		{#if currentWordCount == -1}
-			<div class="analyze">Analyze</div>
+		{#if count == -1}
+			<div class="analyze">
+				<Analyze
+					on:click={(e) => {
+						count = $importantSortedDict.findIndex(
+							(obj) => obj.name.toLowerCase() === e.target.innerText.toLowerCase()
+						);
+						console.log(count);
+					}}
+				/>
+			</div>
 		{/if}
-		{#if currentWordCount >= 0}
-			{#key currentWordCount}
+		{#if count >= 0}
+			{#key count}
 				<div class="title">
 					<span class="name"
-						>{sortedDict[currentWordCount].name[0].toUpperCase()}{sortedDict[
-							currentWordCount
+						>{$importantSortedDict[count].name[0].toUpperCase()}{$importantSortedDict[
+							count
 						].name.slice(1)}</span
 					>
 					<span class="phone">
-						{#if sortedDict[currentWordCount].ukphone}
+						{#if $importantSortedDict[count].ukphone}
 							<span>
-								BrE /{sortedDict[currentWordCount].ukphone}/
+								BrE /{$importantSortedDict[count].ukphone}/
 							</span>{/if}
-						{#if sortedDict[currentWordCount].usphone}
+						{#if $importantSortedDict[count].usphone}
 							<span>
-								NAmE /{sortedDict[currentWordCount].usphone}/
+								NAmE /{$importantSortedDict[count].usphone}/
 							</span>{/if}
 					</span>
 				</div>
 				<div class="word-info">
 					<div class="info">
-						{#await getWordInfos(sortedDict[currentWordCount].name)}
+						{#await getWordInfos($importantSortedDict[count].name)}
 							<div class="pending" />
 						{:then wordInfos}
 							{#each wordInfos as wordInfo}
@@ -152,7 +151,7 @@
 		@apply flex pb-10 pl-36 pr-36 pt-10;
 	}
 	.search-and-list {
-		@apply mr-2 flex h-full w-full basis-2/6 flex-col;
+		@apply mr-2 flex h-full grow-0 basis-1/3 flex-col;
 	}
 	.control {
 		@apply mb-2 flex w-full;
@@ -165,10 +164,13 @@
 	}
 	.list {
 		box-shadow: inset 0 0 5rem white;
-		@apply mt-2 h-full overflow-scroll overflow-x-hidden;
+		@apply mt-2 h-full overflow-x-hidden overflow-y-hidden;
 	}
 	.title-and-info {
-		@apply flex basis-4/6 flex-col pl-2;
+		@apply flex basis-2/3 flex-col pl-2;
+	}
+	.analyze {
+		@apply h-full overflow-scroll overflow-x-hidden;
 	}
 	.word-card {
 		@apply pb-2 pl-2 pr-2 pt-2;

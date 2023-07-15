@@ -1,18 +1,19 @@
 <script>
-	import { dict } from './Config/Store/LoadDict';
-	import { currentWordCount } from './CountWords';
+	import { defaultDict } from './Config/Store/Default/Default.dict';
+	export let Dict = defaultDict,
+		Count = 0;
 	export let offset = 0;
 	let wordCount = 0;
-	currentWordCount.subscribe((result) => {
-		wordCount = Number(result) + Number(offset);
-	});
+	$: wordCount = Number(Count) + Number(offset);
 </script>
 
-<div class="main">
-	<div class="name">
-		{$dict[wordCount].name}
+{#if Dict[wordCount]}
+	<div class="main">
+		<div class="name">
+			{Dict[wordCount].name}
+		</div>
 	</div>
-</div>
+{/if}
 
 <style lang="postcss">
 	.main {

@@ -1,4 +1,4 @@
-export default [
+export const defaultDict = [
 	{
 		name: 'ability',
 		usphone: "ə'bɪləti",

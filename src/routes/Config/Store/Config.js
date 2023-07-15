@@ -1,4 +1,4 @@
-import createStore from './lib/CreateStore';
-import defaultConfig from './Default/Default.config';
+import { createWritableStore } from './lib/CreateStore';
+import { defaultConfig } from './Default/Default.config.js';
 
-export const config = createStore('config', defaultConfig);
+export const config = createWritableStore('config', defaultConfig, true);

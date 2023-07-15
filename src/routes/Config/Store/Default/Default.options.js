@@ -1,6 +1,6 @@
-import { dictionaryResources } from '$lib/dictionary';
+import { dictionaryResources } from '../../../../lib/dictionary.js';
 
-export default {
+export const defaultOptions = {
 	audio: {
 		beep: [true, false],
 		beepFile: [
@@ -59,7 +59,7 @@ export default {
 		]
 	},
 	dict: {
-		shuffle: [true, false],
+		shuffled: [true, false],
 		dictFile: dictionaryResources
 	},
 	input: {

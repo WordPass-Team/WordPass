@@ -1,24 +1,32 @@
-import StoreObject from './StoreObject';
+import localforage from 'localforage';
 import { writable, get } from 'svelte/store';
+import lodash from 'lodash';
 
-export default function createStore(key, defaultValue) {
+export function createWritableStore(key, defaultValue, assign) {
+	console.log(`${key}'s default value: ${JSON.stringify(defaultValue)}`);
 	const w = writable(defaultValue);
-	const { subscribe, set, update } = w;
-	const storeUpdate = function (func) {
+	const { subscribe, update } = w;
+	const storeUpdate = (func) => {
 		update(func);
-		StoreObject.set(key, get(w));
-		console.log(`Update`);
+		localforage.setItem(key, get(w));
+		console.log(`Updated ${key}: ${JSON.stringify(get(w))}`);
 	};
-	const storeSet = function (i) {
+	const storeSet = (i) => {
 		storeUpdate(() => i);
-		console.log(`Set`);
 	};
-	const result = StoreObject.get(key);
-	if (result) {
-		set(result);
-	} else {
-		set(defaultValue);
-	}
+	localforage.getItem(key).then((result) => {
+		if (result) {
+			console.log(`Had ${key}: ${JSON.stringify(result)}`);
+			if (assign) {
+				storeSet(lodash.assignIn(defaultValue, result));
+			} else {
+				storeSet(result);
+			}
+		} else {
+			console.log(`Hadn't ${key}. Use Default ${key}: ${JSON.stringify(defaultValue)}`);
+			storeSet(defaultValue);
+		}
+	});
 	return {
 		subscribe,
 		set: storeSet,

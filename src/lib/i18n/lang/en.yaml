@@ -14,3 +14,7 @@ addDictionaryFile: Add dictionary file
 dictionary: Dictionary
 name: name
 removeDictionaryFile: Remove typewriter sound files
+order: Serial Number
+passed: If Passed
+retry: Number of Retries
+word: Word

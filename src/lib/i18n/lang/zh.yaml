@@ -4,11 +4,18 @@ wordbook: '单词本'
 config: '配置'
 browsrNotSupport: '不完全支持当前浏览器'
 
+# WordBook
+order: '序号'
+word: '单词'
+retry: '重试次数'
+passed: '通过情况'
+
 # Config
 dictionary: '词典'
 name: '名称'
 src: '资源地址'
 submit: '提交'
+setDictionaryShuffledMode: '开启或关闭主页面词典乱序模式'
 setDictionaryFileLocation: '设置词典文件路径'
 addDictionaryFile: '添加词典文件'
 removeDictionaryFile: '移除打字机音效文件'

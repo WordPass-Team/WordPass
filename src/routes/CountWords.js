@@ -1,3 +1,3 @@
-import { writable } from 'svelte/store';
+import { createWritableStore } from './Config/Store/lib/CreateStore';
 
-export const currentWordCount = writable(0);
+export const count = createWritableStore('count', {}); // writable(0);

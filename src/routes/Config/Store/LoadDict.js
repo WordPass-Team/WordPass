@@ -1,21 +1,28 @@
-import defaultConfig from './Default/Default.config';
+import { get } from 'svelte/store';
 import { config } from './Config';
-import createStore from './lib/CreateStore';
-import defaultDict from './Default/Default.dict';
-import store from './lib/StoreObject';
+import { createWritableStore } from './lib/CreateStore';
+import { defaultDict } from './Default/Default.dict';
+import { count } from '../../CountWords';
+import localforage from 'localforage';
 
-let Config = defaultConfig;
-config.subscribe((result) => {
-	Config = result;
-});
+export const dict = createWritableStore(get(config).dict.dictFile.name, defaultDict);
 
-export const dict = createStore(Config.dict.dictFile.name, defaultDict);
-
-export default async function loadDict() {
-	let data = store.get(Config.dict.dictFile.name);
+export default async function loadDict(config) {
+	let data = await localforage.getItem(config.dict.dictFile.name);
 	if (!data) {
-		data = await (await fetch(Config.dict.dictFile.src)).json();
+		console.log(`Downloading ${config.dict.dictFile.name}`);
+		data = await (await fetch(config.dict.dictFile.src)).json();
+		if (!get(count)[config.dict.dictFile.name]) {
+			count.update((i) => {
+				i[config.dict.dictFile.name] = 0;
+				return i;
+			});
+		}
 	}
-	console.log(`Load ${Config.dict.dictFile.name}`);
 	dict.set(data);
+	console.log(`Load ${config.dict.dictFile.name}`);
 }
+
+config.subscribe((result) => {
+	loadDict(result);
+});

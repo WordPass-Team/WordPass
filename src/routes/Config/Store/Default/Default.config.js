@@ -1,16 +1,15 @@
-import options from './Default.options';
+import { defaultOptions } from './Default.options.js';
 
-export default {
+export const defaultConfig = {
 	audio: {
-		beep: options.audio.beep[0],
-		beepFile: options.audio.beepFile[0]
+		beep: defaultOptions.audio.beep[0],
+		beepFile: defaultOptions.audio.beepFile[0]
 	},
 	dict: {
-		shuffle: options.dict.shuffle[0],
-		dictFile: options.dict.dictFile[0]
+		shuffled: defaultOptions.dict.shuffled[0],
+		dictFile: defaultOptions.dict.dictFile[0]
 	},
 	input: {
-		ignoreCase: options.input.ignoreCase[0]
-	},
-	load: false
+		ignoreCase: defaultOptions.input.ignoreCase[0]
+	}
 };

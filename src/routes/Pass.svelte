@@ -1,12 +1,16 @@
 <script>
 	import { record } from './Config/Store/Word.js';
 	import { config } from './Config/Store/Config';
-	import { currentWordCount } from './CountWords';
+	import { count } from './CountWords';
 	import { Howl } from 'howler';
 	import { dict } from './Config/Store/LoadDict';
 	import '@fontsource/ibm-plex-mono/400.css';
 	import '@fontsource/ibm-plex-mono/700.css';
+	import { defaultDict } from './Config/Store/Default/Default.dict.js';
 
+	export let Dict = defaultDict,
+		Count = 0,
+		DictName;
 	function makeUntyped(l) {
 		let untyped = '_';
 		while (untyped.length < l) {
@@ -15,7 +19,7 @@
 		return untyped;
 	}
 	let typed = '',
-		untyped = makeUntyped($dict[$currentWordCount].name.length),
+		untyped = makeUntyped(Dict[Count].name.length),
 		mouseState = false,
 		untypedClassName = 'untyped';
 	function checkControlerVisibility(exp) {
@@ -27,17 +31,13 @@
 			if (!event) event = false;
 			if (event.which == 8) {
 				typed = typed.slice(0, -1);
-			} else if (
-				event.which >= 65 &&
-				event.which <= 90 &&
-				typed.length < $dict[$currentWordCount].name.length
-			) {
+			} else if (event.which >= 65 && event.which <= 90 && typed.length < Dict[Count].name.length) {
 				typed = typed + event.key;
 			}
 			if (!mouseState) {
-				untyped = makeUntyped($dict[$currentWordCount].name.length).slice(typed.length);
+				untyped = makeUntyped(Dict[Count].name.length).slice(typed.length);
 			} else {
-				untyped = $dict[$currentWordCount].name.slice(typed.length);
+				untyped = Dict[Count].name.slice(typed.length);
 			}
 		}
 	}
@@ -45,34 +45,34 @@
 		let Typed = typed,
 			result = false;
 		if ($config.input.ignoreCase) {
-			result = Typed.toLowerCase() == $dict[$currentWordCount].name.toLowerCase();
+			result = Typed.toLowerCase() == Dict[Count].name.toLowerCase();
 		} else {
-			result = Typed == $dict[$currentWordCount].name;
+			result = Typed == Dict[Count].name;
 		}
 		if (result) {
 			// Pass!
-			$dict[$currentWordCount].passed = true;
-			currentWordCount.update((now) => {
-				now = now + 1;
+			Dict[Count].passed = true;
+			count.update((now) => {
+				now[DictName] = Number(now[DictName]) + 1;
+				console.log(now);
 				return now;
 			});
-			console.log($dict[$currentWordCount]);
 			// Clear
 			typed = '';
-			untyped = makeUntyped($dict[$currentWordCount].name.length).slice(typed.length);
-		} else if (Typed.length == $dict[$currentWordCount].name.length) {
+			untyped = makeUntyped(Dict[Count].name.length).slice(typed.length);
+		} else if (Typed.length == Dict[Count].name.length) {
 			// Retry!
 			record.update((i) => {});
 			dict.update((i) => {
-				if (i[$currentWordCount].passed) i[$currentWordCount].passed = false;
-				if (!i[$currentWordCount].retry) i[$currentWordCount].retry = [];
-				i[$currentWordCount].retry.push(new Date().getTime());
+				if (i[Count].passed) i[Count].passed = false;
+				if (!i[Count].retry) i[Count].retry = [];
+				i[Count].retry.push(new Date().getTime());
 				return i;
 			});
-			console.log($dict[$currentWordCount]);
+			console.log(Dict[Count]);
 			// Clear
 			typed = '';
-			untyped = makeUntyped($dict[$currentWordCount].name.length).slice(typed.length);
+			untyped = makeUntyped(Dict[Count].name.length).slice(typed.length);
 		}
 	}
 	async function beep() {
@@ -95,72 +95,82 @@
 	on:keyup={check}
 />
 
-<!-- svelte-ignore a11y-mouse-events-have-key-events -->
-<div class="main">
-	<div class="phone">
-		{#if $dict[$currentWordCount].ukphone}<span class="phone">
-				BrE /{$dict[$currentWordCount].ukphone}/
-			</span>
-		{/if}
-		{#if $dict[$currentWordCount].usphone}
-			<span class="phone">
-				NAmE /{$dict[$currentWordCount].usphone}/
-			</span>
-		{/if}
-	</div>
-	<div
-		class="input"
-		role="textbox"
-		tabindex="0"
-		on:mouseover={() => {
-			mouseState = true;
-			type();
-			untypedClassName = 'untyped untyped-hover';
-		}}
-		on:mouseleave={() => {
-			mouseState = false;
-			type();
-			untypedClassName = 'untyped';
-		}}
-	>
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<span
-			style={checkControlerVisibility(!($currentWordCount - 1 >= 0))}
-			role="button"
-			tabindex="0"
-			on:click={() => {
-				$currentWordCount = $currentWordCount - 1;
-				typed = '';
-				untyped = makeUntyped($dict[$currentWordCount].name.length).slice(typed.length);
-			}}>{`<`}</span
-		>
-		<span><span class="typed">{typed}</span><span class={untypedClassName}>{untyped}</span></span>
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<span
-			style={checkControlerVisibility(!($currentWordCount + 2 <= $dict.length))}
-			role="button"
-			tabindex="0"
-			on:click={() => {
-				$currentWordCount = $currentWordCount + 1;
-				typed = '';
-				untyped = makeUntyped($dict[$currentWordCount].name.length).slice(typed.length);
-			}}>{`>`}</span
-		>
-	</div>
-	{#if $dict[$currentWordCount].trans}
-		<div class="trans">
-			{#each $dict[$currentWordCount].trans as trans, index}
-				{#if $dict[$currentWordCount].trans.length >= 2}
-					<div class="tran">
-						{index + 1}. {trans}
-					</div>
-				{:else}
-					<div class="tran">{trans}</div>
-				{/if}
-			{/each}
+{#if Dict[Count]}
+	<!-- svelte-ignore a11y-mouse-events-have-key-events -->
+	<div class="main">
+		<div class="phone">
+			{#if Dict[Count].ukphone}<span class="phone">
+					BrE /{Dict[Count].ukphone}/
+				</span>
+			{/if}
+			{#if Dict[Count].usphone}
+				<span class="phone">
+					NAmE /{Dict[Count].usphone}/
+				</span>
+			{/if}
 		</div>
-	{/if}
-</div>
+		<div
+			class="input"
+			role="textbox"
+			tabindex="0"
+			on:mouseover={() => {
+				mouseState = true;
+				type();
+				untypedClassName = 'untyped untyped-hover';
+			}}
+			on:mouseleave={() => {
+				mouseState = false;
+				type();
+				untypedClassName = 'untyped';
+			}}
+		>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<span
+				style={checkControlerVisibility(!(Count - 1 >= 0))}
+				role="button"
+				tabindex="0"
+				on:click={() => {
+					count.update((now) => {
+						now[DictName] = Number(now[DictName]) - 1;
+						console.log(now);
+						return now;
+					});
+					typed = '';
+					untyped = makeUntyped(Dict[Count].name.length).slice(typed.length);
+				}}>{`<`}</span
+			>
+			<span><span class="typed">{typed}</span><span class={untypedClassName}>{untyped}</span></span>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<span
+				style={checkControlerVisibility(!(Count + 2 <= Dict.length))}
+				role="button"
+				tabindex="0"
+				on:click={() => {
+					count.update((now) => {
+						now[DictName] = Number(now[DictName]) + 1;
+						console.log(now);
+						return now;
+					});
+					typed = '';
+					untyped = makeUntyped(Dict[Count].name.length).slice(typed.length);
+				}}>{`>`}</span
+			>
+		</div>
+		{#if Dict[Count].trans}
+			<div class="trans">
+				{#each Dict[Count].trans as trans, index}
+					{#if Dict[Count].trans.length >= 2}
+						<div class="tran">
+							{index + 1}. {trans}
+						</div>
+					{:else}
+						<div class="tran">{trans}</div>
+					{/if}
+				{/each}
+			</div>
+		{/if}
+	</div>
+{/if}
 
 <style lang="postcss">
 	.main {
