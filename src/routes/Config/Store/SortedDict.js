@@ -6,10 +6,14 @@ import { derived, get } from 'svelte/store';
 import { dict } from './LoadDict';
 import shuffleArray from './lib/ShuffleArray';
 import { defaultDict } from './Default/Default.dict';
+import { record } from './Word';
 
-let Config;
+let Config, Record;
 config.subscribe((result) => {
 	Config = result;
+});
+record.subscribe((result) => {
+	Record = result;
 });
 
 export const shuffledDict = createWritableStore(`S-${Config.dict.dictFile.name}`, defaultDict);
@@ -27,19 +31,21 @@ export const sortedDict = derived(dict, (i) => {
 
 export const importantSortedDict = derived(sortedDict, (i) => {
 	i = i.toSorted((a, b) => {
-		let A, B;
-		if (a.retry) {
-			A = a.retry.length;
+		let A, Ap, B, Bp;
+		if (Record[a.name] && Record[a.name].retry) {
+			A = Record[a.name].retry.length;
+			Ap = Boolean(Record[a.name].passed);
 		} else {
 			A = 0;
+			Ap = false;
 		}
-		if (b.retry) {
-			B = b.retry.length;
+		if (Record[b.name] && Record[b.name].retry) {
+			B = Record[b.name].retry.length;
+			Bp = Boolean(Record[b.name].passed);
 		} else {
 			B = 0;
+			Bp = false;
 		}
-		const Ap = Boolean(a.passed);
-		const Bp = Boolean(b.passed);
 		if ((Ap && Bp) || (!Ap && !Bp)) {
 			if (A > B) return -1;
 			if (A < B) return 1;

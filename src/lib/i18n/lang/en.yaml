@@ -18,3 +18,4 @@ order: Serial Number
 passed: If Passed
 retry: Number of Retries
 word: Word
+setDictionaryShuffledMode: Turn on or off the dictionary shuffle mode

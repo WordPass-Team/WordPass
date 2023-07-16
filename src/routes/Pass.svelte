@@ -3,7 +3,6 @@
 	import { config } from './Config/Store/Config';
 	import { count } from './CountWords';
 	import { Howl } from 'howler';
-	import { dict } from './Config/Store/LoadDict';
 	import '@fontsource/ibm-plex-mono/400.css';
 	import '@fontsource/ibm-plex-mono/700.css';
 	import { defaultDict } from './Config/Store/Default/Default.dict.js';
@@ -51,10 +50,17 @@
 		}
 		if (result) {
 			// Pass!
-			Dict[Count].passed = true;
+			record.update((i) => {
+				if (!i[Dict[Count].name]) {
+					i[Dict[Count].name] = {};
+				}
+				i[Dict[Count].name].passed = true;
+				console.log(`Pass! ${JSON.stringify(i)}`);
+				return i;
+			});
 			count.update((now) => {
 				now[DictName] = Number(now[DictName]) + 1;
-				console.log(now);
+				console.log(`Count: ${now}`);
 				return now;
 			});
 			// Clear
@@ -62,11 +68,14 @@
 			untyped = makeUntyped(Dict[Count].name.length).slice(typed.length);
 		} else if (Typed.length == Dict[Count].name.length) {
 			// Retry!
-			record.update((i) => {});
-			dict.update((i) => {
-				if (i[Count].passed) i[Count].passed = false;
-				if (!i[Count].retry) i[Count].retry = [];
-				i[Count].retry.push(new Date().getTime());
+			record.update((i) => {
+				if (!i[Dict[Count].name]) {
+					i[Dict[Count].name] = {};
+					i[Dict[Count].name].retry = [new Date().getTime()];
+				}
+				i[Dict[Count].name].retry.push(new Date().getTime());
+				if (i[Dict[Count].name].passed) i[Dict[Count].name].passed = false;
+				console.log(`Retry! ${JSON.stringify(i)}`);
 				return i;
 			});
 			console.log(Dict[Count]);

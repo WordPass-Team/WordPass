@@ -1,4 +1,5 @@
 <script>
+	import { record } from './../Config/Store/Word.js';
 	import { sortedDict, importantSortedDict } from '../Config/Store/SortedDict';
 	import { onDestroy } from 'svelte';
 	import { _ } from 'svelte-i18n';
@@ -26,13 +27,13 @@
 							>{word.name[0].toUpperCase()}{word.name.slice(1)}</span
 						></th
 					>
-					{#if word.retry}
-						<th>{word.retry.length}</th>
+					{#if $record[word.name] && $record[word.name].retry}
+						<th>{$record[word.name].retry.length}</th>
 					{:else}
 						<th>/</th>
 					{/if}
-					{#if word.passed}
-						<th>{word.passed}</th>
+					{#if $record[word.name] && $record[word.name].passed}
+						<th>{$record[word.name].passed}</th>
 					{:else}
 						<th>/</th>
 					{/if}
